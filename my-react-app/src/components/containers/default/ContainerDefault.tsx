@@ -36,15 +36,20 @@ const ContainerDefault : React.FC = () => {
                             {
                                 key: '2',
                                 icon: <UserOutlined />,
-                                label: <Link to={"/"}>Products</Link>,
+                                label: <Link to={"/products"}>Products</Link>,
                             },
                             {
                                 key: '3',
                                 icon: <UploadOutlined />,
-                                label: <Link to={"/create"}>Create</Link>,
+                                label: <Link to={"/create"}>Create Category</Link>,
                             },
                             {
                                 key: '4',
+                                icon: <UploadOutlined />,
+                                label: <Link to={"/products/create"}>Create Product</Link>,
+                            },
+                            {
+                                key: '5',
                                 icon: <VideoCameraOutlined />,
                                 label: <Link to={"/register"}>Register</Link>,
                             },

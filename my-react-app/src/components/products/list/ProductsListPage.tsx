@@ -1,41 +1,95 @@
 import React, {useEffect, useState} from "react";
-import {IProductItem} from "./types.ts";
-import {APP_ENV} from "../../../env";
+import {IProductImage, IProductItem} from "./types.ts";
+import type {ColumnsType} from "antd/es/table";
+import {Button, Table} from "antd";
 import http_common from "../../../http_common.ts";
-import {Button, Card, Table} from "antd";
+import {APP_ENV} from "../../../env";
+import {Link} from "react-router-dom";
 
-const ProductsListPage: React.FC = () => {
-    const [list, setList] = useState<IProductItem[]>();
+const ProductsListPage : React.FC = () => {
+    const [list, setList] = useState<IProductItem[]>(
+        [
+            // {
+            //     id: 1,
+            //     name: "Ковбаса",
+            //     image: "https://images.unian.net/photos/2023_04/1682361642-2646.jpg?r=989872"
+            // }
+        ]
+    );
+    const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
     const imagePath = `${APP_ENV.BASE_URL}/upload/150_`;
 
-    useEffect(() => {
-        (async () => {
-            const response = await http_common.get("/api/products");
-            setList(response.data);
-        })();
-    }, []);
+    const columns: ColumnsType<IProductItem> = [
+        {
+            title: "#",
+            dataIndex: "id",
+        },
+        {
+            title: "Назва",
+            dataIndex: "name",
+        },
+        {
+            title: "Ціна",
+            dataIndex: "price",
+        },
+        {
+            title: "Фото",
+            dataIndex: "product_images",
+            render: (images: IProductImage[]) => {
+                const content = images.map((image, index) => (
+                    <img
+                        key={index}
+                        src={`${imagePath}${image.name}`}
+                        alt="фото"
+                        width={100}
+                        style={{ display: index === currentImageIndex ? "block" : "none" }}
+                    />
+
+                ));
+                return <>{content}</>;
+            },
+        },
+        {
+            title: "Додатково",
+            dataIndex: "product_images",
+            render: (images: IProductImage[]) => {
+                const buttons = images.map((_, index) => (
+                    <Button
+                        key={index}
+                        type="default"
+                        onClick={() => setCurrentImageIndex(index)}
+                    >
+                        {index + 1}
+                    </Button>
+                ));
+                return <>{buttons}</>;
+            },
+        },
+    ];
+
+    useEffect(()=>{
+        //console.log("useEffect working");
+        http_common.get<IProductItem[]>("/api/products")
+            .then(resp=> {
+                //console.log("Axios result", resp.data);
+                setList(resp.data);
+            });
+    },[]);
 
     return (
         <>
-            <h1>Список Продуктів</h1>
-            <div style={{ padding: '20px' }}>
-                {list.map((item, index) => (
-                    <Card
-                        hoverable
-                        style={{ width: 300 }}
-                        cover={<img alt={item.name} src={item} />}
-                    >
-                        <div style={{ padding: '10px' }}>
-                            <h3>{title}</h3>
-                            <p>{description}</p>
-                            <p>Price: ${price}</p>
-                            <Button type="primary">Add to Cart</Button>
-                        </div>
-                    </Card>
-                ))}
-            </div>
+            <h1>Список товарів</h1>
+            {/* Use the Link component from react-router-dom */}
+            <Link to="/create">
+                {/* Use the Button component from antd */}
+                <Button type="primary">
+                    Додати товар
+                </Button>
+            </Link>
+            <Table columns={columns} rowKey={"id"} dataSource={list} size={"middle"} />
         </>
-    );
+    )
 }
 
 export default ProductsListPage;
