@@ -27,6 +27,7 @@ class ProductController extends Controller
         return response()->json($data)
             ->header('Content-Type', 'application/json; charset=utf-8');
     }
+
     //
     /**
      * @OA\Post(
