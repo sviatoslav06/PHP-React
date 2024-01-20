@@ -6,6 +6,8 @@ import CategoryCreatePage from "./components/categories/create/CategoryCreatePag
 import NoMatch from "./components/containers/pages/NoMatch.tsx";
 import React from "react";
 import RegisterPage from "./components/auth/register/RegisterPage.tsx";
+import ProductsListPage from "./components/products/list/ProductsListPage.tsx";
+import ProductCreatePage from "./components/products/create/ProductCreatePage.tsx";
 
 const App: React.FC = () => {
 
@@ -14,6 +16,8 @@ const App: React.FC = () => {
             <Routes>
                 <Route path="/" element={<ContainerDefault />}>
                     <Route index element={<CategoriesListPage />} />
+                    <Route path={'products'} element={<ProductsListPage />} />
+                    <Route path={'products/create'} element={<ProductCreatePage />} />
                     <Route path={'create'} element={<CategoryCreatePage />} />
                     <Route path="update/:categoryId" element={<CategoryUpdatePage />} />
                     <Route path={'register'} element={<RegisterPage />} />
